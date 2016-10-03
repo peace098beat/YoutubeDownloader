@@ -38,7 +38,7 @@ class SimpleDialog(QWidget):
         self.load_setting()
 
         self.downloader = YtDownloader()
-        self.downloader.setDaemon(False)
+        self.downloader.setDaemon(True)
         self.downloader.start()
 
         global print
@@ -59,23 +59,26 @@ class SimpleDialog(QWidget):
     @Slot()
     def on_btn_savedir(self):
         savedir = QFileDialog.getExistingDirectory(
-            self, caption="保存先の指定", dir="./", options=QFileDialog.ShowDirsOnly)
+            self, caption="保存先の指定", dir=self.savedir, options=QFileDialog.ShowDirsOnly)
         self.set_savedir(savedir)
         self.reload_treeview()
 
     def set_savedir(self, savedir):
         self.ui.lineEdit_savedir.setText(savedir)
-        self.savedir=savedir
+        self.savedir = savedir
         self.reload_treeview()
 
     @Slot()
     def reload_treeview(self):
         # TODO:erro check
-        while self.model.removeRows(0,1):
+        # remove all row
+        while self.model.removeRows(0, 1):
             pass
         if not os.path.exists(self.savedir):
             return
+
         files = os.listdir(self.savedir)
+
         for url in files:
             path = os.path.join(self.savedir, url)
             if os.path.isfile(path):
@@ -83,11 +86,12 @@ class SimpleDialog(QWidget):
 
     def load_setting(self):
         setting = QSettings("setting.ini", QSettings.IniFormat)
-        self.set_savedir(setting.value("savedir",""))
- 
+        self.set_savedir(setting.value("savedir", "./"))
+
     def closeEvent(self, event):
         setting = QSettings("setting.ini", QSettings.IniFormat)
         setting.setValue("savedir", self.savedir)
+        self.downloader._stop()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
