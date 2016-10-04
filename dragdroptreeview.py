@@ -10,9 +10,9 @@ class DragDropItemModel( QtGui.QStandardItemModel ):
     '''ドロップ可能なQStandardItemModelの派生クラス。'''
     def __init__( self, parent=None ):
         super( DragDropItemModel, self ).__init__( 0, 3, parent )
-        self.setHeaderData( 0, QtCore.Qt.Horizontal, 'File Path' )
-        self.setHeaderData( 1, QtCore.Qt.Horizontal, 'Last Update' )
-        self.setHeaderData( 2, QtCore.Qt.Horizontal, 'File Size' )
+        self.setHeaderData( 0, QtCore.Qt.Horizontal, 'URL' )
+        self.setHeaderData( 1, QtCore.Qt.Horizontal, 'Done' )
+        self.setHeaderData( 2, QtCore.Qt.Horizontal, 'File' )
 
 
     def addObject( self, url ):
@@ -32,12 +32,14 @@ class DragDropItemModel( QtGui.QStandardItemModel ):
         item = QtGui.QStandardItem()
         item.setText( filepath )
         self.setItem( row, 0, item )
+        item1=item
  
         fileinfo = QtCore.QFileInfo( filepath )
         # ファイルの更新日時のアイテムの追加。
         item = QtGui.QStandardItem()
         item.setText( fileinfo.lastModified().toString( 'yyyy/MM/dd hh:mm:ss' ) )
         self.setItem( row, 1, item )
+        item2=item
  
         # ファイルのサイズのアイテムを追加。
         item = QtGui.QStandardItem()
@@ -45,7 +47,9 @@ class DragDropItemModel( QtGui.QStandardItemModel ):
             str( round( fileinfo.size() / 1024.0, 2 ) ) + 'KB'
         )
         self.setItem( row, 2, item )
+        item3=item
         # ---------------------------------------------------------------------------------
+        return item1,item2,item3
  
     def mimeData( self, indexes ):
         '''ドラッグ先に渡すためのMime Dataを作成し、返す。'''

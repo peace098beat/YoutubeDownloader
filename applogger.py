@@ -43,7 +43,18 @@ import logging
 import logging.config
 import traceback
 
-logging.config.fileConfig(fname='logging.conf')
+def resource_path(relative):
+    return os.path.join(
+        os.environ.get(
+            "_MEIPASS2",
+            os.path.abspath(".")
+        ),
+        relative
+    )
+filename = resource_path("logging.conf")
+
+# logging.config.fileConfig(fname='logging.conf')
+logging.config.fileConfig(fname=filename)
 logger = logging.getLogger('app')
 
 __all__ = ["logger"]

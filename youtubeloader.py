@@ -2,26 +2,25 @@
 
 # tubeloader.py
 
-import threading
-import queue
-
 import sys
+import queue
+import threading
 
 from pytube import YouTube
 
 __all__ = ["YtDownLoader"]
 
-from sys import stdout
-from time import clock
 
+def item_settext_closer(func):
+    setText = func
+    if func is None:
+        return None
 
-def print_status(progress, file_size, start):
+    def wrapper(args):
+        setText(args)
 
-    percent_done = int(progress) * 100. / file_size
-    dt = (clock() - start)
-    if dt > 0:
-        stdout.write("{:0.0f}% {:0.0f}[s]\n".format(percent_done, dt))
-    stdout.flush()
+    return wrapper
+
 
 class YtDownloader(threading.Thread):
 
@@ -30,30 +29,30 @@ class YtDownloader(threading.Thread):
         self.daemon = True
         self.queue = queue.Queue()
 
-    def download(self, url, out_dir):
-        self.queue.put((url, out_dir))
+    def download(self, url, out_dir, progress=None, finish=None):
+        self.queue.put((url, out_dir, progress, finish))
 
     def run(self):
-        print("run")
         while True:
-            url, out_dir = self.queue.get()
-            # download処理
-            print("run {}".format(url))
+            url, out_dir, progress, finish = self.queue.get()
+
             yt = YouTube()
             yt.url = url
             video = yt.get('mp4')
             video.download(path=out_dir,
                            force_overwrite=True,
-                           on_progress=print_status,
-                           on_finish=None)
+                           on_progress=item_settext_closer(progress),
+                           on_finish=item_settext_closer(finish)
+                           )
+            self.queue.task_done()
 
     def stop(self, *args, **kw):
         # self.join()
         self._stop()
-        pass
+
 
 if __name__ == '__main__':
-    url1 = 'https://www.youtube.com/watch?v=kdCaBvN4GcE'
+    url1 = 'https://www.youtube.com/watch?v=RvVfgvHucRY'
     # url2 = 'https://www.youtube.com/watch?v=TN5ltss0NMA'
     target_urls = [url1]
 
