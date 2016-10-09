@@ -131,7 +131,7 @@ class MainWindow( QtGui.QWidget ):
         treeview = DragDropTreeView()
         treeview.setModel( model )
         # カラムの幅を指定する。
-        treeview.setColumnWidth( 0, 400 )
+        treeview.setColumnWidth( 0, 10 )
         treeview.setColumnWidth( 1, 140 )
         treeview.setColumnWidth( 2, 100 )
         # -----------------------------------------------------------------------------

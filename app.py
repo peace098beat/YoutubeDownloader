@@ -14,7 +14,7 @@ print = logger.debug
 from dragdroptreeview import DragDropTreeView, DragDropItemModel
 from youtubeloader import YtDownloader
 
-from UI import Ui_Form
+from Ui_Black import Ui_Form
 
 from pytube import YouTube
 
@@ -27,6 +27,7 @@ class SimpleDialog(QWidget):
         super().__init__(parent)  # python3.x
         self.ui = Ui_Form()
         self.ui.setupUi(self)
+        
 
         # self.ui.treeview = DragDropTreeView()
         # self.ui.verticalLayout.addWidget(self.ui.treeview)
@@ -36,7 +37,7 @@ class SimpleDialog(QWidget):
         # カスタムTreeviewの作成。-----------------------------------------------------
         self.ui.treeview.setModel(self.model)
         # カラムの幅を指定する。
-        self.ui.treeview.setColumnWidth(0, 350)
+        self.ui.treeview.setColumnWidth(0, 150)
         self.ui.treeview.setColumnWidth(1, 80)
         self.ui.treeview.setColumnWidth(2, 50)
         # -----------------------------------------------------------------------------
