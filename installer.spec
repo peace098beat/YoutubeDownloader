@@ -3,10 +3,10 @@
 block_cipher = None
 
 
-a = Analysis(['app.py'],
-             pathex=['C:\\Users\\FiFi\\Desktop\\PyYtDonwloaderApp'],
+a = Analysis(['./src/app.py'],
+             pathex=['./src/'],
              binaries=None,
-             datas=[('./logging.conf','.'),],
+             datas=[('./src/logging.conf','.'),],
              hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],
