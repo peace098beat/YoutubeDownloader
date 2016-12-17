@@ -1,1 +1,1 @@
-pyinstaller installer.spec
+pyinstaller installer.spec --clean > installed.log
